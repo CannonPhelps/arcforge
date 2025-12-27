@@ -20,6 +20,16 @@ interface ItemsGridProps {
   lightweightMode?: boolean;
 }
 
+/**
+ * ItemsGrid
+ *
+ * Responsible for the responsive grid layout (column counts per `itemSize`) and
+ * the “no results” empty state.
+ *
+ * It renders `ItemCard` and wires callbacks up to the parent state:
+ * - `onItemClick(item)` to open the detail panel
+ * - `onItemTracked(name)` to toggle tracked state
+ */
 export default function ItemsGrid({
   items,
   itemSize,

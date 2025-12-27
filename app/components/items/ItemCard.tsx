@@ -18,6 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
+// UI note: Tailwind v4 prefers `bg-linear-to-*` utilities; keep gradients consistent with the repo lint rules.
+
 // Map special types to icons and colors
 const specialTypeIcons: Record<string, { icon: IconDefinition; color: string; bg: string }> = {
   workshop_upgrade: { icon: faWrench, color: "text-amber-400", bg: "bg-amber-500/30" },
@@ -42,6 +44,18 @@ interface ItemCardProps {
   showCraftGraphIcon?: boolean;
 }
 
+/**
+ * ItemCard
+ *
+ * A single “tile” for an item in the grid.
+ * - **Tracking**: optional top-left eye button toggles tracked state (stops click propagation).
+ * - **Crafting Graph shortcut**: optional top-left graph icon links to `/?graph=<ItemName>`.
+ * - **LightweightMode**: disables heavier hover/glow effects for performance.
+ *
+ * Notes:
+ * - Uses translated display name via `tItem(item.name)` but keeps the original `item.name`
+ *   for URLs / tracking keys.
+ */
 export default function ItemCard({
   item,
   displayPrice,
@@ -68,7 +82,7 @@ export default function ItemCard({
       className={`group relative rounded-2xl overflow-hidden cursor-pointer ${
         lightweightMode
           ? "bg-black/40 border border-gray-700"
-          : "bg-gradient-to-br from-black/60 via-black/40 to-black/60 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+          : "bg-linear-to-br from-black/60 via-black/40 to-black/60 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
       }`}
       style={
         lightweightMode
@@ -94,8 +108,8 @@ export default function ItemCard({
           title={isTrackedFunc(item.name) ? t("track.untrack") : t("track.track")}
           className={`absolute top-2 left-2 z-20 w-8 h-8 rounded-md flex items-center justify-center text-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
             isTrackedFunc(item.name)
-              ? "bg-gradient-to-br from-yellow-500/50 to-amber-500/50 hover:from-yellow-500/60 hover:to-amber-500/60 text-white"
-              : "bg-gradient-to-br from-gray-500/30 to-slate-500/30 hover:from-gray-500/40 hover:to-slate-500/40 text-white"
+              ? "bg-linear-to-br from-yellow-500/50 to-amber-500/50 hover:from-yellow-500/60 hover:to-amber-500/60 text-white"
+              : "bg-linear-to-br from-gray-500/30 to-slate-500/30 hover:from-gray-500/40 hover:to-slate-500/40 text-white"
           }`}
           style={{ cursor: "pointer" }}
         >
@@ -111,7 +125,7 @@ export default function ItemCard({
             e.stopPropagation();
           }}
           title={t("item.craftingGraph")}
-          className={`absolute top-2 z-20 w-8 h-8 rounded-md flex items-center justify-center bg-gradient-to-br from-blue-500/30 to-cyan-500/30 hover:from-blue-500/40 hover:to-cyan-500/40 backdrop-blur-sm text-white transition-all duration-200 hover:scale-110 ${
+          className={`absolute top-2 z-20 w-8 h-8 rounded-md flex items-center justify-center bg-linear-to-br from-blue-500/30 to-cyan-500/30 hover:from-blue-500/40 hover:to-cyan-500/40 backdrop-blur-sm text-white transition-all duration-200 hover:scale-110 ${
             showTrackIcon ? "left-11" : "left-2"
           }`}
           style={{ cursor: "pointer" }}
@@ -187,7 +201,7 @@ export default function ItemCard({
 
         {/* Subtle shine effect (disabled in lightweight mode) */}
         {!lightweightMode && (
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
 
         {item.image_urls?.thumb ? (
@@ -215,7 +229,7 @@ export default function ItemCard({
         className={`p-2.5 border-t ${
           lightweightMode
             ? "bg-black/80"
-            : "bg-gradient-to-br from-black/80 to-black/60 backdrop-blur-sm"
+            : "bg-linear-to-br from-black/80 to-black/60 backdrop-blur-sm"
         }`}
         style={{ borderColor: `${borderColor}20` }}
       >

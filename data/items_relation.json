@@ -27631,7 +27631,7 @@
       "special_types": ["crafting_material"]
     },
     "image_urls": {
-      "thumb": "https://arcraiders.wiki/w/images/thumb/9/9a/Voltage-converter.png/348px-Voltage-converter.png.webp",
+      "thumb": "https://arcraiders.wiki/w/images/c/c7/Voltage_Converter.png",
       "original": "https://arcraiders.wiki/w/images/9/9a/Voltage-converter.png",
       "file_page": "https://arcraiders.wiki/wiki/File:Voltage-converter.png"
     },
@@ -39733,24 +39733,6 @@
         "quantity": 1
       },
       {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
-      },
-      {
         "name": "Lance",
         "direction": "in",
         "relation": "sold_by",
@@ -39866,24 +39848,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
       },
       {
         "name": "Lance",
@@ -41245,24 +41209,6 @@
         "quantity": 1
       },
       {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 40,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "3/3",
-            "is_limited": true
-          }
-        ]
-      },
-      {
         "name": "Lance",
         "direction": "in",
         "relation": "sold_by",
@@ -41680,24 +41626,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 5
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 40,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "5/5",
-            "is_limited": true
-          }
-        ]
       },
       {
         "name": "Lance",
@@ -43701,6 +43629,24 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
+      },
+      {
+        "name": "Apollo",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 4800,
+            "currency": "Coins"
+          },
+          {
+            "type": "stock",
+            "value": "3/3",
+            "is_limited": true
+          }
+        ]
       }
     ]
   },
@@ -45738,24 +45684,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -45967,24 +45895,6 @@
           }
         ],
         "output_level": "1x Silencer I"
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "1/1",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -46072,24 +45982,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -46247,24 +46139,6 @@
         "quantity": 1
       },
       {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
-      },
-      {
         "name": "Tian Wen",
         "direction": "in",
         "relation": "sold_by",
@@ -46367,24 +46241,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -46581,24 +46437,6 @@
           }
         ],
         "input_level": "1x Stable Stock II"
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 100,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "2/2",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -48497,24 +48335,6 @@
         "direction": "out",
         "relation": "salvage_to",
         "quantity": 1
-      },
-      {
-        "name": "Shani",
-        "direction": "in",
-        "relation": "sold_by",
-        "quantity": 1,
-        "dependency": [
-          {
-            "type": "price",
-            "amount": 60,
-            "currency": "Cred"
-          },
-          {
-            "type": "stock",
-            "value": "3/3",
-            "is_limited": true
-          }
-        ]
       }
     ]
   },
@@ -49140,7 +48960,7 @@
         ]
       },
       {
-        "name": "Combat Mk. 2",
+        "name": "Combat_Mk._2",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49158,7 +48978,7 @@
         ]
       },
       {
-        "name": "Tactical Mk. 2",
+        "name": "Looting_Mk._2",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49176,7 +48996,7 @@
         ]
       },
       {
-        "name": "Angled Grip II",
+        "name": "Tactical_Mk._2",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49194,7 +49014,7 @@
         ]
       },
       {
-        "name": "Compensator II",
+        "name": "Angled_Grip_II",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49212,7 +49032,7 @@
         ]
       },
       {
-        "name": "Extended Light Mag II",
+        "name": "Compensator_II",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49230,7 +49050,7 @@
         ]
       },
       {
-        "name": "Extended Medium Mag II",
+        "name": "Extended_Light_Mag_II",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49248,7 +49068,25 @@
         ]
       },
       {
-        "name": "Silencer I",
+        "name": "Extended_Medium_Mag_II",
+        "direction": "out",
+        "relation": "trader",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      },
+      {
+        "name": "Silencer_I",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49266,7 +49104,7 @@
         ]
       },
       {
-        "name": "Stable Stock II",
+        "name": "Stable_Stock_II",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49302,7 +49140,7 @@
         ]
       },
       {
-        "name": "Sterilized Bandage",
+        "name": "Sterilized_Bandage",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49320,7 +49158,7 @@
         ]
       },
       {
-        "name": "Surge Shield Recharger",
+        "name": "Surge_Shield_Recharger",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49356,7 +49194,7 @@
         ]
       },
       {
-        "name": "Fireworks Box",
+        "name": "Fireworks_Box",
         "direction": "out",
         "relation": "trader",
         "quantity": 1,
@@ -49446,6 +49284,294 @@
             "type": "price",
             "amount": 10,
             "currency": "Cred"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Combat_Mk._2",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Looting_Mk._2",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Tactical_Mk._2",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Angled_Grip_II",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Compensator_II",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Extended_Light_Mag_II",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Extended_Medium_Mag_II",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Silencer_I",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "1/1",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Stable_Stock_II",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 100,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "2/2",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Sterilized_Bandage",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 40,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "3/3",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Surge_Shield_Recharger",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 40,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "5/5",
+            "is_limited": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Fireworks_Box",
+    "node_type": "item",
+    "edges": [
+      {
+        "name": "Shani",
+        "direction": "in",
+        "relation": "sold_by",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 60,
+            "currency": "Cred"
+          },
+          {
+            "type": "stock",
+            "value": "3/3",
+            "is_limited": true
           }
         ]
       }
@@ -50249,6 +50375,24 @@
           {
             "type": "price",
             "amount": 810,
+            "currency": "Coins"
+          },
+          {
+            "type": "stock",
+            "value": "3/3",
+            "is_limited": true
+          }
+        ]
+      },
+      {
+        "name": "Trailblazer",
+        "direction": "out",
+        "relation": "trader",
+        "quantity": 1,
+        "dependency": [
+          {
+            "type": "price",
+            "amount": 4800,
             "currency": "Coins"
           },
           {

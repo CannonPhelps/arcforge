@@ -160,6 +160,7 @@
   "item.quests": "퀘스트",
   "item.wiki": "위키",
   "item.craftingGraph": "제작 그래프",
+  "item.craftingTable": "Crafting Table",
   "item.notAvailable": "N/A",
 
   "grid.noItemsFound": "아이템을 찾을 수 없습니다",
