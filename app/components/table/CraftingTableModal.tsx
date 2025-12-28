@@ -177,7 +177,30 @@ export default function CraftingTableModal({
 
   // Group relations by type and direction
   const groupedRelations = useMemo(() => {
-    if (!currentItem) return { inputs: {}, outputs: {} };
+    if (!currentItem)
+      return {
+        inputs: {} as Record<
+          string,
+          Array<{
+            key: string;
+            name: string;
+            thumb: string;
+            detail: string;
+            edge: ItemData["edges"][0];
+          }>
+        >,
+        outputs: {} as Record<
+          string,
+          Array<{
+            key: string;
+            name: string;
+            thumb: string;
+            detail: string;
+            edge: ItemData["edges"][0];
+          }>
+        >,
+        currentThumb: "",
+      };
 
     const currentThumb = currentItem.image_urls?.thumb
       ? `/api/proxy-image?url=${encodeURIComponent(currentItem.image_urls.thumb)}`
