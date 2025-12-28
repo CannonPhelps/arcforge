@@ -19,6 +19,18 @@ interface ItemFiltersPanelProps {
   setIsSidebarOpen: (open: boolean) => void;
 }
 
+/**
+ * ItemFiltersPanel
+ *
+ * Sidebar UI for sorting + filtering item types.
+ *
+ * Data model:
+ * - `selectedTypes` is a `Set<string>` that contains both:
+ *   - regular item types (e.g. Weapon, Equipment, etc.)
+ *   - “special types” (category "Special") from the item infobox
+ *
+ * This component only updates filter state; the actual filtering happens in `app/page.tsx`.
+ */
 export default function ItemFiltersPanel({
   sortField,
   setSortField,

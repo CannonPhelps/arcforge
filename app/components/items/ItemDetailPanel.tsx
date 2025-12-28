@@ -12,6 +12,7 @@ import {
   faRocket,
   faScroll,
   faFire,
+  faTableColumns,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Item,
@@ -48,6 +49,20 @@ export default function ItemDetailPanel({
   onItemTracked,
   isTrackedFunc,
 }: ItemDetailPanelProps) {
+  /**
+   * ItemDetailPanel
+   *
+   * Slide-over panel that shows “full details” for one item:
+   * - Header (rarity/type), image, quote/location/sources
+   * - Special sub-sections (workshop upgrades / expedition / candlelight / quests)
+   * - Action buttons:
+   *   - Wiki (external)
+   *   - Crafting Graph: `/?graph=<ItemName>`
+   *   - Crafting Table: `/?graph=<ItemName>&layout=table`
+   *
+   * Notes:
+   * - Translation uses `tItem(item.name)` for display, but routing/IDs use the original `item.name`.
+   */
   const { t, tItem } = useTranslation();
 
   // Get translated item name
@@ -100,9 +115,9 @@ export default function ItemDetailPanel({
       <div className="fixed inset-0 bg-black/70 z-40 backdrop-blur-md" onClick={onClose} />
 
       {/* Detail Panel */}
-      <div className="fixed top-0 right-0 h-full w-full md:w-[500px] bg-gradient-to-br from-black/95 via-purple-950/30 to-black/95 backdrop-blur-2xl border-l border-purple-500/40 z-50 overflow-y-auto animate-slide-in shadow-2xl">
+      <div className="fixed top-0 right-0 h-full w-full md:w-[500px] bg-linear-to-br from-black/95 via-purple-950/30 to-black/95 backdrop-blur-2xl border-l border-purple-500/40 z-50 overflow-y-auto animate-slide-in shadow-2xl">
         {/* Decorative gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none" />
 
         <div className="relative z-10 p-5">
           <div className="absolute top-4 right-4 z-50 flex gap-4">
@@ -161,7 +176,7 @@ export default function ItemDetailPanel({
               )}
             </div>
 
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-purple-200 to-gray-100 drop-shadow-lg">
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-gray-100 via-purple-200 to-gray-100 drop-shadow-lg">
               {translatedName}
             </h2>
           </div>
@@ -172,14 +187,14 @@ export default function ItemDetailPanel({
             {item.image_urls?.thumb && (
               <a
                 href={`/?graph=${encodeURIComponent(item.name)}`}
-                className="relative w-52 h-52 flex-shrink-0 rounded-xl flex items-center justify-center p-4 border overflow-hidden group shadow-xl cursor-pointer"
+                className="relative w-52 h-52 shrink-0 rounded-xl flex items-center justify-center p-4 border overflow-hidden group shadow-xl cursor-pointer"
                 style={{
                   background: rarityGradients[item.infobox?.rarity] || rarityGradients.Common,
                   borderColor: `${rarityColors[item.infobox?.rarity] || "#717471"}40`,
                   boxShadow: `0 8px 32px ${rarityColors[item.infobox?.rarity] || "#717471"}40, inset 0 1px 0 rgba(255,255,255,0.1)`,
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-linear-to-tr from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.image_urls.thumb}
@@ -283,7 +298,7 @@ export default function ItemDetailPanel({
             {/* Workshop Upgrades */}
             {item.infobox?.workshop_upgrades && item.infobox.workshop_upgrades.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-300 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-linear-to-r from-amber-300 to-orange-300 mb-2 uppercase tracking-wider flex items-center gap-2">
                   <FontAwesomeIcon icon={faWrench} className="text-amber-400/70" />
                   {t("item.workshopUpgrades") || "Workshop Upgrades"}
                 </h3>
@@ -292,7 +307,7 @@ export default function ItemDetailPanel({
                     (upgrade: WorkshopUpgradeDetail, idx: number) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between px-2 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded border border-amber-400/30"
+                        className="flex items-center justify-between px-2 py-1 bg-linear-to-r from-amber-500/20 to-orange-500/20 rounded border border-amber-400/30"
                       >
                         <div className="flex items-center gap-1">
                           <span className="text-amber-200 font-semibold capitalize text-xs">
@@ -315,7 +330,7 @@ export default function ItemDetailPanel({
             {/* Expedition Parts */}
             {item.infobox?.expedition_parts && item.infobox.expedition_parts.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-teal-300 mb-2 uppercase tracking-wider flex items-center gap-2">
                   <FontAwesomeIcon icon={faRocket} className="text-cyan-400/70" />
                   {t("item.expeditionParts") || "Expedition"}
                 </h3>
@@ -323,7 +338,7 @@ export default function ItemDetailPanel({
                   {item.infobox.expedition_parts.map((exp: ExpeditionDetail, idx: number) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between px-2 py-1 bg-gradient-to-r from-cyan-500/20 to-teal-500/20 rounded border border-cyan-400/30"
+                      className="flex items-center justify-between px-2 py-1 bg-linear-to-r from-cyan-500/20 to-teal-500/20 rounded border border-cyan-400/30"
                     >
                       <span className="text-cyan-200 font-semibold text-xs">
                         {t("item.expeditionPart")} {exp.part}
@@ -338,7 +353,7 @@ export default function ItemDetailPanel({
             {/* Candlelight Parts */}
             {item.infobox?.candlelight_parts && item.infobox.candlelight_parts.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-orange-300 mb-2 uppercase tracking-wider flex items-center gap-2">
                   <FontAwesomeIcon icon={faFire} className="text-yellow-400/70" />
                   {t("item.candlelightParts") || "Candlelight"}
                 </h3>
@@ -346,7 +361,7 @@ export default function ItemDetailPanel({
                   {item.infobox.candlelight_parts.map((candle: CandlelightDetail, idx: number) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between px-2 py-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded border border-yellow-400/30"
+                      className="flex items-center justify-between px-2 py-1 bg-linear-to-r from-yellow-500/20 to-orange-500/20 rounded border border-yellow-400/30"
                     >
                       <span className="text-yellow-200 font-semibold text-xs">
                         {t("item.candlelightPart")} {candle.part}
@@ -361,7 +376,7 @@ export default function ItemDetailPanel({
             {/* Quests */}
             {item.infobox?.quests && item.infobox.quests.length > 0 && (
               <div>
-                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-pink-300 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-linear-to-r from-rose-300 to-pink-300 mb-2 uppercase tracking-wider flex items-center gap-2">
                   <FontAwesomeIcon icon={faScroll} className="text-rose-400/70" />
                   {t("item.quests") || "Quests"}
                 </h3>
@@ -369,12 +384,12 @@ export default function ItemDetailPanel({
                   {item.infobox.quests.map((quest: QuestDetail, idx: number) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between px-2 py-1 bg-gradient-to-r from-rose-500/20 to-pink-500/20 rounded border border-rose-400/30"
+                      className="flex items-center justify-between px-2 py-1 bg-linear-to-r from-rose-500/20 to-pink-500/20 rounded border border-rose-400/30"
                     >
                       <span className="text-rose-200 font-semibold text-xs truncate">
                         {getQuestLabel(quest.quest)}
                       </span>
-                      <span className="text-rose-300 font-mono text-xs flex-shrink-0">
+                      <span className="text-rose-300 font-mono text-xs shrink-0">
                         ×{quest.quantity}
                       </span>
                     </div>
@@ -390,9 +405,9 @@ export default function ItemDetailPanel({
               href={item.wiki_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex-1 block py-3 bg-gradient-to-br from-purple-500/30 to-purple-600/30 hover:from-purple-500/40 hover:to-purple-600/40 backdrop-blur-sm border border-purple-400/50 hover:border-purple-400/70 rounded-lg text-center text-purple-200 hover:text-purple-100 font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02] overflow-hidden"
+              className="group relative flex-1 block py-3 bg-linear-to-br from-purple-500/30 to-purple-600/30 hover:from-purple-500/40 hover:to-purple-600/40 backdrop-blur-sm border border-purple-400/50 hover:border-purple-400/70 rounded-lg text-center text-purple-200 hover:text-purple-100 font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02] overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-400/0 via-purple-400/20 to-purple-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <div className="absolute inset-0 bg-linear-to-r from-purple-400/0 via-purple-400/20 to-purple-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center justify-center gap-2">
                 <FontAwesomeIcon icon={faExternalLinkAlt} />
                 {t("item.wiki")}
@@ -400,12 +415,22 @@ export default function ItemDetailPanel({
             </a>
             <a
               href={`/?graph=${encodeURIComponent(item.name)}`}
-              className="group relative flex-1 block py-3 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 hover:from-blue-500/40 hover:to-cyan-500/40 backdrop-blur-sm border border-blue-400/50 hover:border-blue-400/70 rounded-lg text-center text-blue-200 hover:text-blue-100 font-semibold text-sm transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.02] overflow-hidden"
+              className="group relative flex-1 block py-3 bg-linear-to-br from-blue-500/30 to-cyan-500/30 hover:from-blue-500/40 hover:to-cyan-500/40 backdrop-blur-sm border border-blue-400/50 hover:border-blue-400/70 rounded-lg text-center text-blue-200 hover:text-blue-100 font-semibold text-sm transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-[1.02] overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/20 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <div className="absolute inset-0 bg-linear-to-r from-blue-400/0 via-blue-400/20 to-blue-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative z-10 flex items-center justify-center gap-2">
                 <FontAwesomeIcon icon={faDiagramProject} />
                 {t("item.craftingGraph")}
+              </span>
+            </a>
+            <a
+              href={`/?graph=${encodeURIComponent(item.name)}&layout=table`}
+              className="group relative flex-1 block py-3 bg-linear-to-br from-orange-500/30 to-amber-500/30 hover:from-orange-500/40 hover:to-amber-500/40 backdrop-blur-sm border border-orange-400/50 hover:border-orange-400/70 rounded-lg text-center text-orange-200 hover:text-orange-100 font-semibold text-sm transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02] overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-linear-to-r from-blue-400/0 via-blue-400/20 to-blue-400/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                <FontAwesomeIcon icon={faTableColumns} />
+                {t("item.craftingTable")}
               </span>
             </a>
           </div>

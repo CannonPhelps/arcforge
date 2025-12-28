@@ -160,6 +160,7 @@
   "item.quests": "任務",
   "item.wiki": "Wiki",
   "item.craftingGraph": "製作關係圖",
+  "item.craftingTable": "Crafting Table",
   "item.notAvailable": "N/A",
 
   "grid.noItemsFound": "找不到任何物品",

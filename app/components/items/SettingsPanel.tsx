@@ -51,6 +51,15 @@ export default function SettingsPanel({
   showCraftGraphIcon,
   setShowCraftGraphIcon,
 }: SettingsPanelProps) {
+  /**
+   * SettingsPanel
+   *
+   * Bottom sheet used to control the *visual presentation* of items (grid size,
+   * price/weight badges, whether track + graph icons are shown, and performance mode).
+   *
+   * Persistence:
+   * - The parent (`app/page.tsx`) persists these values into `localStorage` under `item_view_settings`.
+   */
   const { t } = useTranslation();
 
   if (!isOpen) return null;

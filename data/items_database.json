@@ -9857,7 +9857,7 @@
       "special_types": ["crafting_material"]
     },
     "image_urls": {
-      "thumb": "https://arcraiders.wiki/w/images/thumb/9/9a/Voltage-converter.png/348px-Voltage-converter.png.webp",
+      "thumb": "https://arcraiders.wiki/w/images/c/c7/Voltage_Converter.png",
       "original": "https://arcraiders.wiki/w/images/9/9a/Voltage-converter.png",
       "file_page": "https://arcraiders.wiki/wiki/File:Voltage-converter.png"
     },
@@ -22025,7 +22025,6 @@
       "original": "https://arcraiders.wiki/w/images/9/9e/Candleberries.png",
       "file_page": "https://arcraiders.wiki/wiki/File:Candleberries.png"
     },
-    "sources": ["Live Event: Community Unlock Events#Flickering Flames", "Scavenging"],
     "recycling": {
       "recycling": [
         {

@@ -75,6 +75,14 @@ export default function TrackedItemsPanel({
   isTrackedFunc,
   lightweightMode = false,
 }: TrackedItemsPanelProps) {
+  /**
+   * TrackedItemsPanel
+   *
+   * Bottom sheet showing the subset of `items` that are currently tracked.
+   * - Uses `isTrackedFunc(item.name)` to decide which items are tracked.
+   * - Clicking an item opens the detail panel via `onItemClick(item)` and closes the sheet.
+   * - “Clear All” removes all tracked items and clears `localStorage` key `tracked_items`.
+   */
   const { t, tItem } = useTranslation();
 
   if (!isOpen) return null;

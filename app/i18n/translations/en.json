@@ -155,6 +155,7 @@
   "source.Spotter": "Spotter",
   "item.wiki": "Wiki",
   "item.craftingGraph": "Crafting Graph",
+  "item.craftingTable": "Crafting Table",
   "item.notAvailable": "N/A",
 
   "grid.noItemsFound": "No items found",

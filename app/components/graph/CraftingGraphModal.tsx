@@ -9,6 +9,7 @@ import {
   faShareNodes,
   faTimes,
   faCheck,
+  faTableCellsLarge,
 } from "@fortawesome/free-solid-svg-icons";
 import itemsRelationData from "../../../data/items_relation.json";
 import GraphSettingsPanel from "./GraphSettingsPanel";
@@ -19,11 +20,15 @@ import { buildGraphElements, buildLayoutPositions } from "../../utils/graphHelpe
 import { useTranslation } from "../../i18n";
 import ErrorState from "./ErrorState";
 
+export type CraftingLayout = "graph" | "table";
+
 interface CraftingGraphModalProps {
   isOpen: boolean;
   onClose: () => void;
   itemName: string;
   onItemChange: (itemName: string) => void;
+  layout?: CraftingLayout;
+  onLayoutChange?: (layout: CraftingLayout) => void;
 }
 
 export default function CraftingGraphModal({
@@ -31,6 +36,8 @@ export default function CraftingGraphModal({
   onClose,
   itemName,
   onItemChange,
+  layout = "graph",
+  onLayoutChange,
 }: CraftingGraphModalProps) {
   const { t, tItem } = useTranslation();
   const cyRef = useRef<cytoscape.Core | null>(null);
@@ -70,7 +77,10 @@ export default function CraftingGraphModal({
 
   // Handle share button click
   const handleShare = useCallback(async () => {
-    const shareUrl = `${window.location.origin}/?graph=${encodeURIComponent(itemName)}`;
+    const shareUrl =
+      layout === "table"
+        ? `${window.location.origin}/?graph=${encodeURIComponent(itemName)}&layout=table`
+        : `${window.location.origin}/?graph=${encodeURIComponent(itemName)}`;
     const shareData = {
       title: `${tItem(itemName)} - ARC Forge Crafting Graph`,
       text: t("graph.shareText") || `Check out the crafting graph for ${tItem(itemName)}`,
@@ -104,7 +114,7 @@ export default function CraftingGraphModal({
       setShowCopied(true);
       setTimeout(() => setShowCopied(false), 2000);
     }
-  }, [itemName, t, tItem]);
+  }, [itemName, t, tItem, layout]);
 
   useEffect(() => {
     if (!isOpen || !containerRef.current) {
@@ -257,6 +267,17 @@ export default function CraftingGraphModal({
       <div className="fixed inset-0 z-30 mt-16 sm:mt-20 md:mt-24 flex flex-col bg-[#07020b]">
         {/* Top Right Buttons */}
         <div className="absolute top-4 right-4 z-30 flex items-center gap-3">
+          {/* Layout Toggle */}
+          {onLayoutChange && (
+            <button
+              onClick={() => onLayoutChange("table")}
+              className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500/30 to-cyan-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-blue-500/40 hover:to-cyan-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+              aria-label={t("item.craftingTable")}
+              title={t("item.craftingTable")}
+            >
+              <FontAwesomeIcon icon={faTableCellsLarge} className="text-white text-xl" />
+            </button>
+          )}
           {/* Share Button */}
           <button
             onClick={handleShare}
@@ -284,9 +305,20 @@ export default function CraftingGraphModal({
 
   return (
     /* Modal Container - positioned below header using margin-top matching header heights */
-    <div className="fixed inset-0 z-30 mt-16 sm:mt-20 md:mt-24 flex flex-col bg-[#07020b] text-gray-100 overflow-hidden">
+    <div className="fixed inset-0 z-30 mt-16 sm:mt-20 md:mt-24 flex flex-col bg-[#07020b] text-gray-100 overflow-hidden overscroll-contain">
       {/* Top Right Buttons */}
       <div className="absolute top-4 right-4 z-30 flex items-center gap-3">
+        {/* Layout Toggle */}
+        {onLayoutChange && (
+          <button
+            onClick={() => onLayoutChange("table")}
+            className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500/30 to-cyan-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-blue-500/40 hover:to-cyan-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+            aria-label={t("item.craftingTable")}
+            title={t("item.craftingTable")}
+          >
+            <FontAwesomeIcon icon={faTableCellsLarge} className="text-white text-xl" />
+          </button>
+        )}
         {/* Share Button */}
         <button
           onClick={handleShare}

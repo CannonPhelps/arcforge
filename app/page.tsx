@@ -14,11 +14,13 @@ import ItemsGrid from "./components/items/ItemsGrid";
 import ItemDetailPanel from "./components/items/ItemDetailPanel";
 import SettingsPanel from "./components/items/SettingsPanel";
 import CraftingGraphModal from "./components/graph/CraftingGraphModal";
+import CraftingTableModal from "./components/table/CraftingTableModal";
 import { Item } from "./types/item";
 import { typeToCategory } from "./config/categoryConfig";
 import { rarityOrder } from "./config/rarityConfig";
 import { useTranslation, itemTranslations } from "./i18n";
 import TrackedItemsPanel from "./components/items/TrackedItemsPanel";
+import type { CraftingLayout } from "./components/graph/CraftingGraphModal";
 
 // Prevent FontAwesome from adding its CSS automatically since we're importing it manually
 config.autoAddCss = false;
@@ -44,19 +46,40 @@ function HomeContent() {
 
   // Crafting Graph Modal state - check URL params for initial state
   const graphItemParam = searchParams.get("graph");
-  const [isGraphModalOpen, setIsGraphModalOpen] = useState(!!graphItemParam);
-  const [graphItemName, setGraphItemName] = useState(graphItemParam || "Power Rod");
+  const tableItemParam = searchParams.get("table"); // legacy support
+  const layoutParam = searchParams.get("layout");
+
+  const craftingLayout: CraftingLayout = tableItemParam
+    ? "table"
+    : layoutParam === "table"
+      ? "table"
+      : "graph";
+  const craftingItemParam = tableItemParam || graphItemParam;
+
+  const [isGraphModalOpen, setIsGraphModalOpen] = useState(!!craftingItemParam);
+  const [graphItemName, setGraphItemName] = useState(craftingItemParam || "Power Rod");
+
+  const buildCraftingUrl = useCallback((itemName: string, layout: CraftingLayout) => {
+    const graphQuery = `graph=${encodeURIComponent(itemName)}`;
+    return layout === "table" ? `/?${graphQuery}&layout=table` : `/?${graphQuery}`;
+  }, []);
 
   // Handle URL parameter changes for graph modal
   useEffect(() => {
-    if (graphItemParam) {
+    // Canonicalize legacy `?table=` to `?graph=&layout=table`
+    if (tableItemParam && !graphItemParam) {
+      router.replace(buildCraftingUrl(tableItemParam, "table"), { scroll: false });
+      return;
+    }
+
+    if (craftingItemParam) {
       // Use requestAnimationFrame to defer setState and avoid cascading renders
       requestAnimationFrame(() => {
-        setGraphItemName(graphItemParam);
+        setGraphItemName(craftingItemParam);
         setIsGraphModalOpen(true);
       });
     }
-  }, [graphItemParam]);
+  }, [craftingItemParam, tableItemParam, graphItemParam, router, buildCraftingUrl]);
 
   // Fix hydration bug: Initialize trackedItems as empty Set on both server and client
   const [trackedItems, setTrackedItems] = useState<Set<string>>(new Set());
@@ -200,16 +223,16 @@ function HomeContent() {
       setGraphItemName(itemName);
       setIsGraphModalOpen(true);
       // Update URL without navigation
-      router.push(`/?graph=${encodeURIComponent(itemName)}`, { scroll: false });
+      router.push(buildCraftingUrl(itemName, craftingLayout), { scroll: false });
     },
-    [router],
+    [router, buildCraftingUrl, craftingLayout],
   );
 
   // Handle crafting graph button click (opens with current/default item)
   const handleCraftingGraphClick = useCallback(() => {
     setIsGraphModalOpen(true);
-    router.push(`/?graph=${encodeURIComponent(graphItemName)}`, { scroll: false });
-  }, [router, graphItemName]);
+    router.push(buildCraftingUrl(graphItemName, craftingLayout), { scroll: false });
+  }, [router, graphItemName, buildCraftingUrl, craftingLayout]);
 
   // Initialize with no types selected
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(() => new Set());
@@ -219,6 +242,26 @@ function HomeContent() {
     setIsGraphModalOpen(false);
     router.push("/", { scroll: false });
   }, [router]);
+
+  // Prevent the page behind the modal from scrolling when the crafting modal is open
+  useEffect(() => {
+    if (!isGraphModalOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+
+    // Avoid layout shift when hiding scrollbar (Windows)
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+    };
+  }, [isGraphModalOpen]);
 
   // Handle logo click - reset all state
   const handleLogoClick = useCallback(() => {
@@ -613,15 +656,35 @@ function HomeContent() {
         />
 
         {/* Crafting Graph Modal */}
-        <CraftingGraphModal
-          isOpen={isGraphModalOpen}
-          onClose={handleGraphModalClose}
-          itemName={graphItemName}
-          onItemChange={(name) => {
-            setGraphItemName(name);
-            router.push(`/?graph=${encodeURIComponent(name)}`, { scroll: false });
-          }}
-        />
+        {craftingLayout === "table" ? (
+          <CraftingTableModal
+            isOpen={isGraphModalOpen}
+            onClose={handleGraphModalClose}
+            itemName={graphItemName}
+            layout={craftingLayout}
+            onLayoutChange={(nextLayout) => {
+              router.push(buildCraftingUrl(graphItemName, nextLayout), { scroll: false });
+            }}
+            onItemChange={(name) => {
+              setGraphItemName(name);
+              router.push(buildCraftingUrl(name, craftingLayout), { scroll: false });
+            }}
+          />
+        ) : (
+          <CraftingGraphModal
+            isOpen={isGraphModalOpen}
+            onClose={handleGraphModalClose}
+            itemName={graphItemName}
+            layout={craftingLayout}
+            onLayoutChange={(nextLayout) => {
+              router.push(buildCraftingUrl(graphItemName, nextLayout), { scroll: false });
+            }}
+            onItemChange={(name) => {
+              setGraphItemName(name);
+              router.push(buildCraftingUrl(name, craftingLayout), { scroll: false });
+            }}
+          />
+        )}
       </div>
     </>
   );

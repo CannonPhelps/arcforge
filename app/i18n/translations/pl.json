@@ -157,6 +157,7 @@
   "source.Spotter": "Zwiadowca",
   "item.wiki": "Wiki",
   "item.craftingGraph": "Graf wytwarzania",
+  "item.craftingTable": "Crafting Table",
   "item.notAvailable": "Niedostępne",
 
   "grid.noItemsFound": "Nie znaleziono przedmiotów",
