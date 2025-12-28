@@ -34,6 +34,7 @@
 
   "specialType.workshop_upgrade": "Potenz. officina",
   "specialType.expedition": "Spedizione",
+  "specialType.expedition_2": "Spedizione 2",
   "specialType.candlelight": "Lume di candela",
   "specialType.safe_to_recycle": "Sicuro da riciclare",
   "specialType.crafting_material": "Materiale di crafting",
@@ -155,6 +156,8 @@
   "item.workshopUpgrades": "Potenziamenti officina",
   "item.expeditionParts": "Spedizione",
   "item.expeditionPart": "Parte",
+  "item.expedition2Parts": "Spedizione 2",
+  "item.expedition2Part": "Parte",
   "item.candlelightParts": "Lume di candela",
   "item.candlelightPart": "Parte",
   "item.quests": "Missioni",

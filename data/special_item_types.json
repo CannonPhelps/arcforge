@@ -140,6 +140,32 @@
       { "item": "Leaper Pulse Unit", "quantity": 3 }
     ]
   },
+  "expedition_2": {
+    "part_1": [
+      { "item": "Metal Parts", "quantity": 150 },
+      { "item": "Plastic Parts", "quantity": 200 },
+      { "item": "ARC Alloy", "quantity": 80 },
+      { "item": "Steel Spring", "quantity": 15 }
+    ],
+    "part_2": [
+      { "item": "Durable Cloth", "quantity": 35 },
+      { "item": "Wires", "quantity": 25 },
+      { "item": "Electrical Components", "quantity": 20 },
+      { "item": "Cooling Coil", "quantity": 4 }
+    ],
+    "part_3": [
+      { "item": "Light Bulb", "quantity": 4 },
+      { "item": "Battery", "quantity": 30 },
+      { "item": "Shredder Gyro", "quantity": 10 },
+      { "item": "Exodus Modules", "quantity": 1 }
+    ],
+    "part_4": [
+      { "item": "Frequency Modulation Box", "quantity": 5 },
+      { "item": "Advanced Electrical Components", "quantity": 5 },
+      { "item": "Ion Sputter", "quantity": 3 },
+      { "item": "Leaper Pulse Unit", "quantity": 3 }
+    ]
+  },
   "candlelight": {
     "part_1": [
       { "item": "Empty Wine Bottle", "quantity": 1 },

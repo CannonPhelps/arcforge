@@ -20,7 +20,7 @@ def build_special_types_map(special_types_data: dict) -> dict:
                 quantity = item_entry["quantity"]
                 
                 if item_name not in items_map:
-                    items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "candlelight_parts": [], "quests": []}
+                    items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
                 
                 items_map[item_name]["special_types"].add("workshop_upgrade")
                 items_map[item_name]["workshop_upgrades"].append({
@@ -42,10 +42,31 @@ def build_special_types_map(special_types_data: dict) -> dict:
             quantity = item_entry["quantity"]
             
             if item_name not in items_map:
-                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "candlelight_parts": [], "quests": []}
+                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
             
             items_map[item_name]["special_types"].add("expedition")
             items_map[item_name]["expedition_parts"].append({
+                "part": part_num,
+                "quantity": quantity
+            })
+    
+    # Process expedition_2 (nested by part)
+    expedition_2_data = special_types_data.get("expedition_2", {})
+    for part_key, part_value in expedition_2_data.items():
+        # Skip non-item parts
+        if not isinstance(part_value, list):
+            continue
+        
+        part_num = int(part_key.replace("part_", ""))
+        for item_entry in part_value:
+            item_name = item_entry["item"]
+            quantity = item_entry["quantity"]
+            
+            if item_name not in items_map:
+                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
+            
+            items_map[item_name]["special_types"].add("expedition_2")
+            items_map[item_name]["expedition_2_parts"].append({
                 "part": part_num,
                 "quantity": quantity
             })
@@ -63,7 +84,7 @@ def build_special_types_map(special_types_data: dict) -> dict:
             quantity = item_entry["quantity"]
             
             if item_name not in items_map:
-                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "candlelight_parts": [], "quests": []}
+                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
             
             items_map[item_name]["special_types"].add("candlelight")
             items_map[item_name]["candlelight_parts"].append({
@@ -80,7 +101,7 @@ def build_special_types_map(special_types_data: dict) -> dict:
             note = item_entry.get("note")
             
             if item_name not in items_map:
-                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "candlelight_parts": [], "quests": []}
+                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
             
             items_map[item_name]["special_types"].add("quest")
             quest_detail = {"quest": quest_name, "quantity": quantity}
@@ -93,7 +114,7 @@ def build_special_types_map(special_types_data: dict) -> dict:
         items_list = special_types_data.get(list_key, [])
         for item_name in items_list:
             if item_name not in items_map:
-                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "candlelight_parts": [], "quests": []}
+                items_map[item_name] = {"special_types": set(), "workshop_upgrades": [], "expedition_parts": [], "expedition_2_parts": [], "candlelight_parts": [], "quests": []}
             items_map[item_name]["special_types"].add(list_key)
     
     # Convert sets to sorted lists
@@ -171,6 +192,9 @@ def adjust_item_data():
             
             if item_data['expedition_parts']:
                 item['infobox']['expedition_parts'] = item_data['expedition_parts']
+            
+            if item_data['expedition_2_parts']:
+                item['infobox']['expedition_2_parts'] = item_data['expedition_2_parts']
             
             if item_data['candlelight_parts']:
                 item['infobox']['candlelight_parts'] = item_data['candlelight_parts']

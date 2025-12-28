@@ -34,6 +34,7 @@
 
   "specialType.workshop_upgrade": "Aprimoramento de oficina",
   "specialType.expedition": "Expedição",
+  "specialType.expedition_2": "Expedição 2",
   "specialType.candlelight": "Luz de Vela",
   "specialType.safe_to_recycle": "Seguro para reciclar",
   "specialType.crafting_material": "Material de criação",
@@ -155,6 +156,8 @@
   "item.workshopUpgrades": "Aprimoramentos de oficina",
   "item.expeditionParts": "Expedição",
   "item.expeditionPart": "Parte",
+  "item.expedition2Parts": "Expedição 2",
+  "item.expedition2Part": "Parte",
   "item.candlelightParts": "Luz de Vela",
   "item.candlelightPart": "Parte",
   "item.quests": "Missões",

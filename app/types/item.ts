@@ -31,6 +31,7 @@ export interface Item {
     special_types?: string[];
     workshop_upgrades?: WorkshopUpgradeDetail[];
     expedition_parts?: ExpeditionDetail[];
+    expedition_2_parts?: ExpeditionDetail[];
     candlelight_parts?: CandlelightDetail[];
     quests?: QuestDetail[];
     location?: string;

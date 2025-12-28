@@ -34,6 +34,7 @@
 
   "specialType.workshop_upgrade": "Amélioration d'Atelier",
   "specialType.expedition": "Expédition",
+  "specialType.expedition_2": "Expédition 2",
   "specialType.candlelight": "Lumière de bougie",
   "specialType.safe_to_recycle": "Recyclable",
   "specialType.crafting_material": "Matériau de Craft",
@@ -153,6 +154,8 @@
   "item.workshopUpgrades": "Améliorations d'atelier",
   "item.expeditionParts": "Expédition",
   "item.expeditionPart": "Partie",
+  "item.expedition2Parts": "Expédition 2",
+  "item.expedition2Part": "Partie",
   "item.candlelightParts": "Lumière de bougie",
   "item.candlelightPart": "Partie",
   "item.quests": "Quêtes",

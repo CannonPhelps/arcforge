@@ -34,6 +34,7 @@
 
   "specialType.workshop_upgrade": "작업장 업그레이드",
   "specialType.expedition": "원정",
+  "specialType.expedition_2": "원정 2",
   "specialType.candlelight": "촛불",
   "specialType.safe_to_recycle": "안전한 재활용",
   "specialType.crafting_material": "제작 재료",
@@ -155,6 +156,8 @@
   "item.workshopUpgrades": "작업장 업그레이드",
   "item.expeditionParts": "원정",
   "item.expeditionPart": "파트",
+  "item.expedition2Parts": "원정 2",
+  "item.expedition2Part": "파트",
   "item.candlelightParts": "촛불",
   "item.candlelightPart": "파트",
   "item.quests": "퀘스트",

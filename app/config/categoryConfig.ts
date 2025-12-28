@@ -48,6 +48,7 @@ export const allCategories = [
 export const specialTypeLabels: { [key: string]: string } = {
   workshop_upgrade: "Workshop Upgrade",
   expedition: "Expedition",
+  expedition_2: "Expedition 2",
   candlelight: "Candlelight",
   safe_to_recycle: "Safe to Recycle",
   crafting_material: "Crafting Material",

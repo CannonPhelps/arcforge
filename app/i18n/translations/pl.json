@@ -41,6 +41,7 @@
 
   "specialType.workshop_upgrade": "Ulepszenie warsztatu",
   "specialType.expedition": "Ekspedycja",
+  "specialType.expedition_2": "Ekspedycja 2",
   "specialType.candlelight": "Światło świecy",
   "specialType.safe_to_recycle": "Bezpieczny do recyklingu",
   "specialType.crafting_material": "Materiał do wytwarzania",
@@ -130,6 +131,8 @@
   "item.workshopUpgrades": "Ulepszenia warsztatu",
   "item.expeditionParts": "Ekspedycja",
   "item.expeditionPart": "Część",
+  "item.expedition2Parts": "Ekspedycja 2",
+  "item.expedition2Part": "Część",
   "item.candlelightParts": "Światło świecy",
   "item.candlelightPart": "Część",
   "item.quests": "Misje",

@@ -350,6 +350,29 @@ export default function ItemDetailPanel({
               </div>
             )}
 
+            {/* Expedition 2 Parts */}
+            {item.infobox?.expedition_2_parts && item.infobox.expedition_2_parts.length > 0 && (
+              <div>
+                <h3 className="text-xs font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-teal-300 mb-2 uppercase tracking-wider flex items-center gap-2">
+                  <FontAwesomeIcon icon={faRocket} className="text-cyan-400/70" />
+                  {t("item.expedition2Parts") || "Expedition 2"}
+                </h3>
+                <div className="space-y-1">
+                  {item.infobox.expedition_2_parts.map((exp: ExpeditionDetail, idx: number) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between px-2 py-1 bg-linear-to-r from-cyan-500/20 to-teal-500/20 rounded border border-cyan-400/30"
+                    >
+                      <span className="text-cyan-200 font-semibold text-xs">
+                        {t("item.expedition2Part")} {exp.part}
+                      </span>
+                      <span className="text-cyan-300 font-mono text-xs">×{exp.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Candlelight Parts */}
             {item.infobox?.candlelight_parts && item.infobox.candlelight_parts.length > 0 && (
               <div>
