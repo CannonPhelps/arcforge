@@ -9,13 +9,20 @@ import {
   faTimes,
   faCheck,
   faDiagramProject,
-  faArrowRight,
+  faArrowDown,
+  faArrowUp,
+  faHammer,
+  faWrench,
+  faRecycle,
+  faGem,
+  faArrowTrendUp,
+  faCoins,
 } from "@fortawesome/free-solid-svg-icons";
 import itemsRelationData from "../../../data/items_relation.json";
 import TableSettingsPanel from "./TableSettingsPanel";
 import HelpPanel from "./HelpPanel";
 import { ItemData } from "../../types/graph";
-import { cleanRelationName, formatEdgeLabel, getEdgePriority } from "../../utils/graphHelpers";
+import { cleanRelationName, getEdgePriority } from "../../utils/graphHelpers";
 import { useTranslation } from "../../i18n";
 import ErrorState from "./ErrorState";
 import type { CraftingLayout } from "../graph/CraftingGraphModal";
@@ -28,6 +35,61 @@ interface CraftingTableModalProps {
   layout?: CraftingLayout;
   onLayoutChange?: (layout: CraftingLayout) => void;
 }
+
+// Relation type configuration
+const RELATION_CONFIG: Record<
+  string,
+  {
+    icon: typeof faHammer;
+    color: string;
+    bgColor: string;
+    borderColor: string;
+    glowColor: string;
+  }
+> = {
+  craft: {
+    icon: faHammer,
+    color: "#60a5fa",
+    bgColor: "rgba(96, 165, 250, 0.08)",
+    borderColor: "rgba(96, 165, 250, 0.3)",
+    glowColor: "rgba(96, 165, 250, 0.15)",
+  },
+  repair: {
+    icon: faWrench,
+    color: "#f87171",
+    bgColor: "rgba(248, 113, 113, 0.08)",
+    borderColor: "rgba(248, 113, 113, 0.3)",
+    glowColor: "rgba(248, 113, 113, 0.15)",
+  },
+  recycle: {
+    icon: faRecycle,
+    color: "#34d399",
+    bgColor: "rgba(52, 211, 153, 0.08)",
+    borderColor: "rgba(52, 211, 153, 0.3)",
+    glowColor: "rgba(52, 211, 153, 0.15)",
+  },
+  salvage: {
+    icon: faGem,
+    color: "#4ade80",
+    bgColor: "rgba(74, 222, 128, 0.08)",
+    borderColor: "rgba(74, 222, 128, 0.3)",
+    glowColor: "rgba(74, 222, 128, 0.15)",
+  },
+  upgrade: {
+    icon: faArrowTrendUp,
+    color: "#f472b6",
+    bgColor: "rgba(244, 114, 182, 0.08)",
+    borderColor: "rgba(244, 114, 182, 0.3)",
+    glowColor: "rgba(244, 114, 182, 0.15)",
+  },
+  trade: {
+    icon: faCoins,
+    color: "#fbbf24",
+    bgColor: "rgba(251, 191, 36, 0.08)",
+    borderColor: "rgba(251, 191, 36, 0.3)",
+    glowColor: "rgba(251, 191, 36, 0.15)",
+  },
+};
 
 export default function CraftingTableModal({
   isOpen,
@@ -59,7 +121,6 @@ export default function CraftingTableModal({
 
   // Memoize translation functions
   const translateItem = useCallback((name: string) => tItem(name), [tItem]);
-  const translateRelation = useCallback((key: string) => t(key), [t]);
 
   // Handle item navigation within the modal
   const handleItemSelect = useCallback(
@@ -114,8 +175,9 @@ export default function CraftingTableModal({
 
   const currentItem = useMemo(() => itemsLookup.get(itemName), [itemsLookup, itemName]);
 
-  const rows = useMemo(() => {
-    if (!currentItem) return [];
+  // Group relations by type and direction
+  const groupedRelations = useMemo(() => {
+    if (!currentItem) return { inputs: {}, outputs: {} };
 
     const currentThumb = currentItem.image_urls?.thumb
       ? `/api/proxy-image?url=${encodeURIComponent(currentItem.image_urls.thumb)}`
@@ -132,14 +194,33 @@ export default function CraftingTableModal({
       return selectedEdgeTypes.has(cleaned);
     };
 
-    const raw = currentItem.edges
+    const inputs: Record<
+      string,
+      Array<{
+        key: string;
+        name: string;
+        thumb: string;
+        detail: string;
+        edge: ItemData["edges"][0];
+      }>
+    > = {};
+
+    const outputs: Record<
+      string,
+      Array<{
+        key: string;
+        name: string;
+        thumb: string;
+        detail: string;
+        edge: ItemData["edges"][0];
+      }>
+    > = {};
+
+    currentItem.edges
       .filter((edge) => shouldIncludeEdge(edge.relation))
-      .map((edge, idx) => {
+      .forEach((edge, idx) => {
         const cleaned = cleanRelationName(edge.relation);
         const relationKey = cleaned === "trader" || cleaned === "sold_by" ? "trade" : cleaned;
-        const relationLabel = translateRelation
-          ? translateRelation(`graph.${relationKey}`)
-          : relationKey;
 
         // Extra detail: price (trade) or level item (recycle/salvage/etc)
         let detail = "";
@@ -157,80 +238,56 @@ export default function CraftingTableModal({
           }
         }
 
-        const fromName = edge.direction === "in" ? edge.name : currentItem.name;
-        const toName = edge.direction === "in" ? currentItem.name : edge.name;
+        const otherName = edge.name;
+        const otherItem = itemsLookup.get(otherName);
+        const otherThumb = otherItem?.image_urls?.thumb
+          ? `/api/proxy-image?url=${encodeURIComponent(otherItem.image_urls.thumb)}`
+          : "";
 
-        const fromItem = itemsLookup.get(fromName);
-        const toItem = itemsLookup.get(toName);
-
-        const fromThumb =
-          fromName === currentItem.name
-            ? currentThumb
-            : fromItem?.image_urls?.thumb
-              ? `/api/proxy-image?url=${encodeURIComponent(fromItem.image_urls.thumb)}`
-              : "";
-
-        const toThumb =
-          toName === currentItem.name
-            ? currentThumb
-            : toItem?.image_urls?.thumb
-              ? `/api/proxy-image?url=${encodeURIComponent(toItem.image_urls.thumb)}`
-              : "";
-
-        return {
+        const entry = {
           key: `${edge.direction}:${edge.name}:${edge.relation}:${idx}`,
-          edge,
-          relationKey,
-          relationLabel,
-          label: formatEdgeLabel(edge, translateRelation, translateItem),
+          name: otherName,
+          thumb: otherThumb,
           detail,
-          fromName,
-          toName,
-          fromThumb,
-          toThumb,
+          edge,
         };
+
+        if (edge.direction === "in") {
+          // Input: other item → current item
+          if (!inputs[relationKey]) inputs[relationKey] = [];
+          inputs[relationKey].push(entry);
+        } else {
+          // Output: current item → other item
+          if (!outputs[relationKey]) outputs[relationKey] = [];
+          outputs[relationKey].push(entry);
+        }
       });
 
-    raw.sort((a, b) => {
-      // Show outputs first (current -> other), then inputs (other -> current)
-      const dirA = a.edge.direction === "out" ? 0 : 1;
-      const dirB = b.edge.direction === "out" ? 0 : 1;
-      if (dirA !== dirB) return dirA - dirB;
+    // Sort each group by edge priority then name
+    const sortEntries = (entries: (typeof inputs)[string]) => {
+      return entries.sort((a, b) => {
+        const prio = getEdgePriority(a.edge) - getEdgePriority(b.edge);
+        if (prio !== 0) return prio;
+        return a.name.localeCompare(b.name);
+      });
+    };
 
-      const prio = getEdgePriority(a.edge) - getEdgePriority(b.edge);
-      if (prio !== 0) return prio;
+    Object.keys(inputs).forEach((key) => sortEntries(inputs[key]));
+    Object.keys(outputs).forEach((key) => sortEntries(outputs[key]));
 
-      return a.fromName.localeCompare(b.fromName) || a.toName.localeCompare(b.toName);
+    return { inputs, outputs, currentThumb };
+  }, [currentItem, itemsLookup, selectedEdgeTypes, translateItem]);
+
+  // Get all active relation types
+  const activeRelationTypes = useMemo(() => {
+    const types = new Set<string>();
+    Object.keys(groupedRelations.inputs).forEach((key) => types.add(key));
+    Object.keys(groupedRelations.outputs).forEach((key) => types.add(key));
+    return Array.from(types).sort((a, b) => {
+      const order = ["craft", "repair", "recycle", "salvage", "upgrade", "trade"];
+      return order.indexOf(a) - order.indexOf(b);
     });
-
-    return raw;
-  }, [currentItem, itemsLookup, selectedEdgeTypes, translateItem, translateRelation]);
-
-  const getRelationBorderClass = (relationKey: string) => {
-    const borders: Record<string, string> = {
-      craft: "border-blue-500/50",
-      repair: "border-red-500/50",
-      recycle: "border-emerald-500/50",
-      salvage: "border-green-500/50",
-      upgrade: "border-pink-500/50",
-      trade: "border-amber-500/50",
-    };
-
-    return borders[relationKey] ?? "border-white/10";
-  };
-
-  const getRelationColor = (relationKey: string) => {
-    const borders: Record<string, string> = {
-      craft: "text-blue-500",
-      repair: "text-red-500",
-      recycle: "text-emerald-500",
-      salvage: "text-green-500",
-      upgrade: "text-pink-500",
-      trade: "text-amber-500",
-    };
-
-    return borders[relationKey] ?? "border-white/10";
-  };
+  }, [groupedRelations]);
 
   if (!isOpen) return null;
 
@@ -244,7 +301,7 @@ export default function CraftingTableModal({
           {onLayoutChange && (
             <button
               onClick={() => onLayoutChange("graph")}
-              className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-indigo-500/30 to-purple-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-indigo-500/40 hover:to-purple-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+              className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-500/30 to-purple-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-indigo-500/40 hover:to-purple-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
               aria-label={t("item.craftingGraph")}
               title={t("item.craftingGraph")}
             >
@@ -254,7 +311,7 @@ export default function CraftingTableModal({
           {/* Share Button */}
           <button
             onClick={handleShare}
-            className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-emerald-500/30 to-teal-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-emerald-500/40 hover:to-teal-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+            className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-emerald-500/30 to-teal-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-emerald-500/40 hover:to-teal-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
             aria-label={t("buttons.share")}
           >
             <FontAwesomeIcon
@@ -265,7 +322,7 @@ export default function CraftingTableModal({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-red-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-red-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+            className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-red-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-red-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
             aria-label={t("buttons.close")}
           >
             <FontAwesomeIcon icon={faTimes} className="text-white text-xl" />
@@ -276,67 +333,74 @@ export default function CraftingTableModal({
     );
   }
 
+  const currentThumb = currentItem?.image_urls?.thumb
+    ? `/api/proxy-image?url=${encodeURIComponent(currentItem.image_urls.thumb)}`
+    : "";
+
   return (
     /* Modal Container - positioned below header using margin-top matching header heights */
     <div className="fixed inset-0 z-30 mt-16 sm:mt-20 md:mt-24 flex flex-col bg-[#07020b] text-gray-100 overflow-hidden overscroll-contain">
       {/* Top Right Buttons */}
-      <div className="absolute top-4 right-4 z-30 flex items-center gap-3">
+      <div className="absolute top-4 right-4 z-30 flex items-center gap-2 sm:gap-3">
         {/* Layout Toggle */}
         {onLayoutChange && (
           <button
             onClick={() => onLayoutChange("graph")}
-            className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-indigo-500/30 to-purple-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-indigo-500/40 hover:to-purple-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+            className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-gradient-to-br from-indigo-500/30 to-purple-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-indigo-500/40 hover:to-purple-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
             aria-label={t("item.craftingGraph")}
             title={t("item.craftingGraph")}
           >
-            <FontAwesomeIcon icon={faDiagramProject} className="text-white text-xl" />
+            <FontAwesomeIcon icon={faDiagramProject} className="text-white text-lg sm:text-xl" />
           </button>
         )}
         {/* Share Button */}
         <button
           onClick={handleShare}
-          className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-emerald-500/30 to-teal-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-emerald-500/40 hover:to-teal-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-gradient-to-br from-emerald-500/30 to-teal-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-emerald-500/40 hover:to-teal-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
           aria-label={t("buttons.share")}
         >
           <FontAwesomeIcon
             icon={showCopied ? faCheck : faShareNodes}
-            className={`text-xl transition-colors duration-200 ${showCopied ? "text-emerald-400" : "text-white"}`}
+            className={`text-lg sm:text-xl transition-colors duration-200 ${showCopied ? "text-emerald-400" : "text-white"}`}
           />
         </button>
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-12 h-12 flex items-center justify-center bg-linear-to-br from-red-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-red-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
+          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-gradient-to-br from-red-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-red-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:scale-105"
           aria-label={t("buttons.close")}
         >
-          <FontAwesomeIcon icon={faTimes} className="text-white text-xl" />
+          <FontAwesomeIcon icon={faTimes} className="text-white text-lg sm:text-xl" />
         </button>
       </div>
 
       {/* Help Button */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="absolute bottom-28 right-8 z-30 w-14 h-14 flex items-center justify-center bg-linear-to-br from-blue-500/30 to-cyan-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-blue-500/40 hover:to-cyan-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-blue-500/50 hover:scale-105"
+        className="absolute bottom-24 sm:bottom-28 right-4 sm:right-8 z-30 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gradient-to-br from-blue-500/30 to-cyan-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-blue-500/40 hover:to-cyan-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-blue-500/50 hover:scale-105"
         aria-label={t("buttons.openHelp")}
       >
-        <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent rounded-full pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full pointer-events-none"></div>
         <FontAwesomeIcon
           icon={faQuestionCircle}
-          className="text-white text-xl relative z-10 drop-shadow-lg"
+          className="text-white text-lg sm:text-xl relative z-10 drop-shadow-lg"
         />
       </button>
 
       {/* Settings Button */}
       <button
         onClick={() => setIsSettingsOpen(true)}
-        className="absolute bottom-8 right-8 z-30 w-14 h-14 flex items-center justify-center bg-linear-to-br from-purple-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-purple-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-purple-500/50 hover:scale-105"
+        className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-30 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gradient-to-br from-purple-500/30 to-pink-500/20 backdrop-blur-xl rounded-full shadow-2xl hover:from-purple-500/40 hover:to-pink-500/30 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-purple-500/50 hover:scale-105"
         aria-label={t("buttons.openRelationFilters")}
       >
-        <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent rounded-full pointer-events-none"></div>
-        <FontAwesomeIcon icon={faCog} className="text-white text-xl relative z-10 drop-shadow-lg" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full pointer-events-none"></div>
+        <FontAwesomeIcon
+          icon={faCog}
+          className="text-white text-lg sm:text-xl relative z-10 drop-shadow-lg"
+        />
       </button>
 
-      {/* Graph Canvas */}
+      {/* Main Content */}
       <div className="flex-1 relative bg-[#07020b] overflow-hidden overscroll-contain">
         <div
           className="absolute inset-0"
@@ -346,126 +410,211 @@ export default function CraftingTableModal({
           }}
         />
 
-        <div className="relative z-10 h-full overflow-y-auto overscroll-contain px-4 py-6 md:px-8 md:py-8">
-          {/* Header */}
-          <div className="mb-6 flex flex-col gap-2">
-            <div className="text-xs uppercase tracking-widest text-purple-300/80 font-semibold">
-              {t("item.craftingTable")}
-            </div>
-            <div className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-gray-100 via-purple-200 to-gray-100 drop-shadow-lg">
-              {tItem(itemName)}
+        <div className="relative z-10 h-full overflow-y-auto overscroll-contain px-3 py-4 sm:px-6 sm:py-6 md:px-8 md:py-8 pb-24 sm:pb-32">
+          {/* Header with Item Info */}
+          <div className="mb-6 sm:mb-8">
+            <div className="flex items-center gap-4 sm:gap-6">
+              {/* Item Image */}
+              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-purple-900/40 to-black/60 border border-purple-500/30 flex items-center justify-center overflow-hidden shrink-0 shadow-xl shadow-purple-500/10">
+                {currentThumb ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={currentThumb}
+                    alt={tItem(itemName)}
+                    className="w-full h-full object-contain p-2"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <div className="text-gray-600 text-2xl">?</div>
+                )}
+              </div>
+              {/* Item Name & Label */}
+              <div className="flex flex-col gap-1">
+                <div className="text-[10px] sm:text-xs uppercase tracking-widest text-purple-400/80 font-semibold">
+                  {t("item.craftingTable")}
+                </div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-purple-200 to-gray-100 leading-tight">
+                  {tItem(itemName)}
+                </h1>
+              </div>
             </div>
           </div>
 
-          {/* Row-based From → To layout */}
-          <div className="shadow-2xl divide-purple-500/10 overflow-hidden">
-            {rows.length === 0 ? (
-              <div className="px-5 py-6 text-sm text-gray-400">
-                No matching relations (check filters).
+          {/* Relation Cards Grid */}
+          {activeRelationTypes.length === 0 ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="text-center">
+                <div className="text-gray-500 text-lg mb-2">
+                  {t("graph.noRelations") || "No relations found"}
+                </div>
+                <div className="text-gray-600 text-sm">
+                  {t("graph.checkFilters") || "Try adjusting the filters"}
+                </div>
               </div>
-            ) : (
-              <div className="divide-y divide-purple-500/10">
-                {rows.map((row) => {
-                  const fromIsCurrent = row.fromName === itemName;
-                  const toIsCurrent = row.toName === itemName;
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              {activeRelationTypes.map((relationType) => {
+                const config = RELATION_CONFIG[relationType] || RELATION_CONFIG.craft;
+                const inputItems = groupedRelations.inputs[relationType] || [];
+                const outputItems = groupedRelations.outputs[relationType] || [];
+                const hasItems = inputItems.length > 0 || outputItems.length > 0;
 
-                  return (
+                if (!hasItems) return null;
+
+                return (
+                  <div
+                    key={relationType}
+                    className="rounded-2xl overflow-hidden"
+                    style={{
+                      backgroundColor: config.bgColor,
+                      border: `1px solid ${config.borderColor}`,
+                      boxShadow: `0 4px 24px ${config.glowColor}`,
+                    }}
+                  >
+                    {/* Card Header */}
                     <div
-                      key={row.key}
-                      className="px-5 py-4 hover:bg-purple-500/10 transition-colors"
+                      className="px-4 py-3 flex items-center gap-3 border-b"
+                      style={{ borderColor: config.borderColor }}
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
-                        {/* From */}
-                        <button
-                          onClick={() => !fromIsCurrent && handleItemSelect(row.fromName)}
-                          disabled={fromIsCurrent}
-                          className={`w-full text-left flex items-center gap-3 ${fromIsCurrent ? "opacity-90 cursor-default" : "hover:brightness-110"}`}
-                        >
-                          <div className="w-24 h-24 rounded-xl bg-black/40 border border-purple-500/20 flex items-center justify-center overflow-hidden shrink-0">
-                            {row.fromThumb ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={row.fromThumb}
-                                alt={tItem(row.fromName)}
-                                className="w-full h-full object-contain"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <div className="text-gray-600 text-sm">?</div>
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-bold text-gray-100 truncate text-2xl">
-                              {tItem(row.fromName)}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {fromIsCurrent ? "Selected item" : "Tap to open"}
-                            </div>
-                          </div>
-                        </button>
-
-                        {/* Relation */}
-                        <div
-                          className={`flex flex-col items-center md:items-center gap-2 rounded-xl border ${getRelationBorderClass(
-                            row.relationKey,
-                          )} bg-black/25 px-3 py-2`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <p className={`text-2xl ${getRelationColor(row.relationKey)}`}>
-                              {row.relationLabel}
-                            </p>
-                          </div>
-                          <FontAwesomeIcon
-                            icon={faArrowRight}
-                            className={`text-4xl ${getRelationColor(row.relationKey)}`}
-                          />
-
-                          {row.detail && (
-                            <div className="text-xs text-purple-200/90 text-center">
-                              {row.detail}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* To */}
-                        <button
-                          onClick={() => !toIsCurrent && handleItemSelect(row.toName)}
-                          disabled={toIsCurrent}
-                          className={`w-full text-left md:text-right flex md:flex-row-reverse items-center gap-3 ${toIsCurrent ? "opacity-90 cursor-default" : "hover:brightness-110"}`}
-                        >
-                          <div className="w-24 h-24 rounded-xl bg-black/40 border border-purple-500/20 flex items-center justify-center overflow-hidden shrink-0">
-                            {row.toThumb ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={row.toThumb}
-                                alt={tItem(row.toName)}
-                                className="w-full h-full object-contain"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <div className="text-gray-600 text-sm">?</div>
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-bold text-gray-100 truncate text-2xl">
-                              {tItem(row.toName)}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {toIsCurrent ? "Current item" : "Tap to open"}
-                            </div>
-                          </div>
-                        </button>
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ backgroundColor: `${config.color}20` }}
+                      >
+                        <FontAwesomeIcon
+                          icon={config.icon}
+                          className="text-sm"
+                          style={{ color: config.color }}
+                        />
                       </div>
+                      <span
+                        className="font-bold text-sm uppercase tracking-wide"
+                        style={{ color: config.color }}
+                      >
+                        {t(`graph.${relationType}`)}
+                      </span>
+                      <span
+                        className="ml-auto text-xs font-medium px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: `${config.color}15`,
+                          color: config.color,
+                        }}
+                      >
+                        {inputItems.length + outputItems.length}
+                      </span>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+
+                    {/* Card Content */}
+                    <div className="p-3 space-y-3">
+                      {/* Inputs Section */}
+                      {inputItems.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 px-1">
+                            <FontAwesomeIcon
+                              icon={faArrowDown}
+                              className="text-xs"
+                              style={{ color: config.color }}
+                            />
+                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                              {t("graph.inputs") || "Inputs"}
+                            </span>
+                          </div>
+                          <div className="space-y-1.5">
+                            {inputItems.map((item) => (
+                              <button
+                                key={item.key}
+                                onClick={() => handleItemSelect(item.name)}
+                                className="w-full flex items-center gap-3 px-2 py-2 rounded-xl bg-black/30 hover:bg-black/50 border border-transparent hover:border-white/10 transition-all group"
+                              >
+                                <div className="w-10 h-10 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shrink-0">
+                                  {item.thumb ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      src={item.thumb}
+                                      alt={tItem(item.name)}
+                                      className="w-full h-full object-contain"
+                                      onError={(e) => {
+                                        e.currentTarget.style.display = "none";
+                                      }}
+                                    />
+                                  ) : (
+                                    <span className="text-gray-600 text-xs">?</span>
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0 text-left">
+                                  <div className="text-sm font-medium text-gray-200 truncate group-hover:text-white transition-colors">
+                                    {tItem(item.name)}
+                                  </div>
+                                  {item.detail && (
+                                    <div className="text-[10px] text-gray-500 truncate">
+                                      {item.detail}
+                                    </div>
+                                  )}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Outputs Section */}
+                      {outputItems.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 px-1">
+                            <FontAwesomeIcon
+                              icon={faArrowUp}
+                              className="text-xs"
+                              style={{ color: config.color }}
+                            />
+                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                              {t("graph.outputs") || "Outputs"}
+                            </span>
+                          </div>
+                          <div className="space-y-1.5">
+                            {outputItems.map((item) => (
+                              <button
+                                key={item.key}
+                                onClick={() => handleItemSelect(item.name)}
+                                className="w-full flex items-center gap-3 px-2 py-2 rounded-xl bg-black/30 hover:bg-black/50 border border-transparent hover:border-white/10 transition-all group"
+                              >
+                                <div className="w-10 h-10 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shrink-0">
+                                  {item.thumb ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      src={item.thumb}
+                                      alt={tItem(item.name)}
+                                      className="w-full h-full object-contain"
+                                      onError={(e) => {
+                                        e.currentTarget.style.display = "none";
+                                      }}
+                                    />
+                                  ) : (
+                                    <span className="text-gray-600 text-xs">?</span>
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0 text-left">
+                                  <div className="text-sm font-medium text-gray-200 truncate group-hover:text-white transition-colors">
+                                    {tItem(item.name)}
+                                  </div>
+                                  {item.detail && (
+                                    <div className="text-[10px] text-gray-500 truncate">
+                                      {item.detail}
+                                    </div>
+                                  )}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

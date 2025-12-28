@@ -170,6 +170,10 @@
   "graph.salvage": "Salvage",
   "graph.upgrade": "Upgrade",
   "graph.trade": "Trade",
+  "graph.inputs": "Inputs",
+  "graph.outputs": "Outputs",
+  "graph.noRelations": "No relations found",
+  "graph.checkFilters": "Try adjusting the filters",
 
   "help.title": "How to Use",
   "help.navigation": "Navigation",
