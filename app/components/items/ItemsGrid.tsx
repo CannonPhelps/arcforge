@@ -46,7 +46,7 @@ export default function ItemsGrid({
   const { t } = useTranslation();
 
   return (
-    <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 relative z-10">
+    <main className="p-4 sm:p-6 lg:p-8 relative z-10">
       <div className="max-w-[1600px] mx-auto">
         <div
           className={`grid gap-3 sm:gap-4 lg:gap-6 ${

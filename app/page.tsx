@@ -490,7 +490,7 @@ function HomeContent() {
         }}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-[#07020b] via-[#0a0514] to-[#07020b] text-gray-100 flex flex-col relative overflow-hidden">
+      <div className="h-screen bg-gradient-to-br from-[#07020b] via-[#0a0514] to-[#07020b] text-gray-100 flex flex-col relative overflow-hidden">
         {/* Header - Logo, Search, and Navigation */}
         <Header
           searchQuery={searchQuery}
@@ -592,20 +592,22 @@ function HomeContent() {
             setIsSidebarOpen={setIsSidebarOpen}
           />
 
-          {/* Items Grid */}
-          <ItemsGrid
-            items={filteredAndSortedItems}
-            itemSize={itemSize}
-            displayPrice={displayPrice}
-            displayWeight={displayWeight}
-            showTrackIcons={showTrackIcons}
-            showSpecialIcons={showSpecialIcons}
-            showCraftGraphIcon={showCraftGraphIcon}
-            lightweightMode={lightweightMode}
-            onItemClick={setSelectedItem}
-            onItemTracked={toggleItemTracked}
-            isTrackedFunc={isTracked}
-          />
+          {/* Items Grid (this is the scroll container) */}
+          <div className="flex-1 h-full overflow-y-auto">
+            <ItemsGrid
+              items={filteredAndSortedItems}
+              itemSize={itemSize}
+              displayPrice={displayPrice}
+              displayWeight={displayWeight}
+              showTrackIcons={showTrackIcons}
+              showSpecialIcons={showSpecialIcons}
+              showCraftGraphIcon={showCraftGraphIcon}
+              lightweightMode={lightweightMode}
+              onItemClick={setSelectedItem}
+              onItemTracked={toggleItemTracked}
+              isTrackedFunc={isTracked}
+            />
+          </div>
         </div>
 
         {/* Item Detail Panel */}

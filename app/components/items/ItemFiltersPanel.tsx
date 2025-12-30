@@ -105,17 +105,17 @@ export default function ItemFiltersPanel({
   return (
     <aside
       className={`
-      w-83 bg-black/30 backdrop-blur-xl border-r border-purple-500/30 overflow-y-auto shadow-2xl z-50 lg:z-10
-      fixed lg:relative inset-y-0 left-0 transition-transform duration-300 ease-in-out
-      lg:translate-x-0
+      w-83 bg-black/30 backdrop-blur-xl border-r border-purple-500/30 shadow-2xl z-50 lg:z-10
+      fixed lg:sticky lg:top-0 lg:h-full lg:overflow-y-auto inset-y-0 left-0 transition-transform duration-300 ease-in-out
+      lg:translate-x-0 overflow-y-auto
       ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
     `}
     >
-      <div className="p-6 space-y-6">
+      <div className="p-6">
         {/* Close Button (Mobile Only) */}
         <button
           onClick={() => setIsSidebarOpen(false)}
-          className="lg:hidden absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/60 hover:bg-red-500/30 backdrop-blur-sm rounded-lg transition-colors text-gray-400 hover:text-red-300 border border-purple-500/20 hover:border-red-500/50 z-10"
+          className="lg:hidden absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-black/60 hover:bg-red-500/30 backdrop-blur-sm rounded-lg transition-colors text-gray-400 hover:text-red-300 border border-purple-500/20 hover:border-red-500/50 z-20"
           aria-label={t("buttons.close")}
         >
           <span className="text-lg">✕</span>
@@ -123,7 +123,7 @@ export default function ItemFiltersPanel({
 
         {/* Sort Section */}
         <div>
-          <h3 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 mb-4 flex items-center gap-2 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-300 to-blue-300 mb-4 flex items-center gap-2 uppercase tracking-wider">
             <FontAwesomeIcon icon={faArrowUpAZ} className="text-purple-400" />
             {t("sort.title")}
           </h3>
@@ -172,7 +172,7 @@ export default function ItemFiltersPanel({
 
           <button
             onClick={() => setSortAscending(!sortAscending)}
-            className="w-full px-3 py-1.5 rounded-lg text-xs font-semibold bg-black/40 text-gray-300 border border-purple-500/30 hover:bg-purple-500/20 hover:text-purple-200 transition-colors flex items-center justify-center gap-2"
+            className="w-full px-3 py-1.5 rounded-lg text-xs font-semibold bg-black/40 text-gray-300 border border-purple-500/30 hover:bg-purple-500/20 hover:text-purple-200 transition-colors flex items-center justify-center gap-2 mb-4"
           >
             <FontAwesomeIcon
               icon={sortAscending ? faArrowUpAZ : faArrowDownAZ}
@@ -186,9 +186,9 @@ export default function ItemFiltersPanel({
         <div className="border-t border-purple-500/20 shadow-sm shadow-purple-500/10"></div>
 
         {/* Category Filters */}
-        <div>
+        <div className="space-y-6 mt-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-blue-300 flex items-center gap-2 uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-300 to-blue-300 flex items-center gap-2 uppercase tracking-wider">
               <FontAwesomeIcon icon={faFilter} className="text-purple-400" />
               {t("filter.title")}
             </h3>
